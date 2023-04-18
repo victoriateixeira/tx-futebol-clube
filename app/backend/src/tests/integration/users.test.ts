@@ -8,7 +8,7 @@ import Example from '../../database/models/ExampleModel';
 
 import { Response } from 'superagent';
 import { Model } from 'sequelize';
-
+import Team from '../../database/models'
 chai.use(chaiHttp);
 
 const { expect } = chai;
@@ -31,7 +31,7 @@ describe('GET /teams', () => {
           "teamName": "Botafogo"
         },
       ];
-sinon.stub(Model, 'findAll').resolves(teams as Team[]);
+// sinon.stub(Model, 'findAll').resolves(teams);
 const httpResponse = await chai.request(app).get('/teams');
 expect (httpResponse.status).to.be.equal(200);
     })

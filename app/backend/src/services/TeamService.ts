@@ -1,15 +1,15 @@
 import ITeamRepository from '../repositories/interface/ITeamRepository';
-import IUserService, { ITeam } from './interfaces/ITeam';
+import ITeamService, { ITeam } from './interfaces/ITeamService';
 
-export default class TeamService implements IUserService {
+export default class TeamService implements ITeamService {
   private _teamRepository: ITeamRepository;
 
   constructor(teamRepository: ITeamRepository) {
     this._teamRepository = teamRepository;
   }
 
-  async getTeams(): Promise<ITeam> {
+  async getTeams(): Promise<ITeam[]> {
     const teams = await this._teamRepository.getTeams();
-    return teams;
+    return teams as ITeam[];
   }
 }
