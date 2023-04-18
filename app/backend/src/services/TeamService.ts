@@ -8,8 +8,8 @@ export default class TeamService implements ITeamService {
     this._teamRepository = teamRepository;
   }
 
-  async getTeams(): Promise<ITeam[]> {
-    const teams = await this._teamRepository.getTeams();
+  async getAll(): Promise<ITeam[]> {
+    const teams = await this._teamRepository.getAll();
     return teams as ITeam[];
   }
 }

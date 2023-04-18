@@ -1,4 +1,5 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import TeamController from '../controllers/teamController';
 import TeamSequelizeRepository from '../repositories/TeamSequelizeRepository';
 import TeamService from '../services/TeamService';
 
@@ -6,6 +7,6 @@ const router = Router();
 
 const teamSequelizeRepository = new TeamSequelizeRepository();
 const teamService = new TeamService(teamSequelizeRepository);
-
+const teamController = new TeamController(teamService);
 router
-  .get('/teams', (req: Request, res: Response) => res.status(200).json(''));
+  .get('/teams', teamController.getAll.bind(teamController));
