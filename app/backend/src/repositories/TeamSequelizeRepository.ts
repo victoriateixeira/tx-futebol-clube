@@ -1,3 +1,4 @@
+import NotFoundError from '../errors/notFound-error';
 import { ITeam } from '../services/interfaces/ITeamService';
 import Team from '../database/models/Team';
 import ITeamRepository from './interface/ITeamRepository';
