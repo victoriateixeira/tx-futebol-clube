@@ -9,4 +9,10 @@ export default class TeamSequelizeRepository implements ITeamRepository {
     const teams = await this._teamModel.findAll();
     return teams;
   }
+
+  async getById(id: number): Promise<ITeam> {
+    const team = await this._teamModel.findByPk(id);
+    if (!team) throw new NotFoundError('Time não encontrado');
+    return team;
+  }
 }
