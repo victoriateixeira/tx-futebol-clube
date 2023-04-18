@@ -9,9 +9,12 @@ module.exports = {
       id: {
         primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
       },
       teamName: {
         type: Sequelize.STRING,
+        field: 'team_name',
       }
     });
   },
