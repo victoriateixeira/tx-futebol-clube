@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import TeamController from '../controllers/teamController';
+import TeamController from '../controllers/TeamController';
 import TeamSequelizeRepository from '../repositories/TeamSequelizeRepository';
 import TeamService from '../services/TeamService';
 

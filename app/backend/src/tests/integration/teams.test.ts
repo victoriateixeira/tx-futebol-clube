@@ -34,6 +34,7 @@ describe('GET /teams', () => {
 // sinon.stub(Model, 'findAll').resolves(teams) as Team;
 const httpResponse = await chai.request(app).get('/teams');
 expect (httpResponse.status).to.be.equal(200);
+expect (httpResponse.body).to.deep.equal(teams);
     })
   })
 })
