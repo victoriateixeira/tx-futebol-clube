@@ -15,8 +15,9 @@ const { expect } = chai;
 describe('tests routes for TEAMS', () => {
 
   describe('GET /teams', () => {
+    afterEach(sinon.restore);
     describe('when request is successful', async () => {
-      afterEach(sinon.restore);
+      
       it('should return status 200 and all teams in db', async () => {
         const teams = [
           {
