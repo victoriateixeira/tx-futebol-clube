@@ -2,13 +2,12 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
-
 import { app } from '../../app';
-import Example from '../../database/models/ExampleModel';
-
-import { Response } from 'superagent';
+// import Example from '../../database/models/ExampleModel';
+import LoginService from '../../services/LoginService'
+// import { Response } from 'superagent';
 import { Model } from 'sequelize';
-import User from '../../database/models/Team'
+import User from '../../database/models/User'
 chai.use(chaiHttp);
 
 const { expect } = chai;
@@ -25,7 +24,7 @@ describe('tests routes for LOGIN', () => {
           }
   const httpResponse = await chai.request(app).post('/login').send(body)
   expect (httpResponse.status).to.be.equal(400);
-  expect (httpResponse.body).to.deep.equal({error: 'o campo email é obrigatório'});
+  expect (httpResponse.body).to.deep.equal({ message: "All fields must be filled" });
       })
       it('should return status 400 when password is not provided', async () => {
         const body =
@@ -34,7 +33,7 @@ describe('tests routes for LOGIN', () => {
           }
   const httpResponse = await chai.request(app).post('/login').send(body)
   expect (httpResponse.status).to.be.equal(400);
-  expect (httpResponse.body).to.deep.equal({error: 'o campo senha é obrigatório'});
+  expect (httpResponse.body).to.deep.equal({ message: "All fields must be filled" });
       })
       it('should return status 401 when email is not found', async () => {
         const body =
@@ -43,9 +42,10 @@ describe('tests routes for LOGIN', () => {
             password: '123456'
 
           }
-  const httpResponse = await chai.request(app).post('/login').send(body)
-  expect (httpResponse.status).to.be.equal(401);
-  expect (httpResponse.body).to.deep.equal({error: 'email e/ou senha inválidos'});
+        sinon.stub(Model, "findOne").resolves(null)
+        const httpResponse = await chai.request(app).post('/login').send(body)
+        expect (httpResponse.status).to.be.equal(401);
+        expect (httpResponse.body).to.deep.equal({ "message": "Invalid email or password" });
       })
       it('should return status 401 when password is not valid', async () => {
         const user = {
@@ -60,11 +60,11 @@ describe('tests routes for LOGIN', () => {
             email: 'valid_email@email.com',
             password: 'invalid_password'
           }
-  sinon.stub(Model, 'findOne').resolves(user as User)
-  sinon.stub(UserService.prototype, 'verifyUserPassword').returns(false)
-  const httpResponse = await chai.request(app).post('/login').send(body)
-  expect (httpResponse.status).to.be.equal(401);
-  expect (httpResponse.body).to.deep.equal({error: 'email e/ou senha inválidos'});
+         sinon.stub(Model, 'findOne').resolves(user as User)
+         sinon.stub(LoginService, 'verifyUserPassword').returns(false)
+         const httpResponse = await chai.request(app).post('/login').send(body)
+         expect (httpResponse.status).to.be.equal(401);
+         expect (httpResponse.body).to.deep.equal({ "message": "Invalid email or password" });
       })
     })
 
@@ -84,7 +84,7 @@ describe('tests routes for LOGIN', () => {
               password: '123456'
             }
     sinon.stub(Model, 'findOne').resolves(user as User)
-    sinon.stub(UserService.prototype, 'verifyUserPassword').returns(true)
+    sinon.stub(LoginService, 'verifyUserPassword').returns(true)
     const httpResponse = await chai.request(app).post('/login').send(body)
     expect (httpResponse.status).to.be.equal(401);
     expect(httpResponse.body).to.have.key('token')

@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import ITokenService, { ITokenPayload } from './interfaces/ITokenService';
 
-export default class JwtTokenService implements ITokenService {
+export default class TokenService implements ITokenService {
   private _secret: jwt.Secret;
   private _options: jwt.SignOptions;
 
