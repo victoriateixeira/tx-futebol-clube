@@ -1,3 +1,4 @@
+import UnauthorizedError from '../errors/unauthorized-error';
 import IUserRepository from '../repositories/interface/IUserRepository';
 import ILoginService from './interfaces/ILoginService';
 
@@ -15,7 +16,7 @@ export default class LoginService implements ILoginService {
   async login(email: string, password:string): Promise<string> {
     const isUser = await this._userRepository.getByEmail(email);
     if (!isUser || !LoginService.verifyUserPassword(password, isUser.password)) {
-      throw new UnathourizedError('email e/ou senha inválidos');
+      throw new UnauthorizedError('email e/ou senha inválidos');
     }
     return 'token';
   }
