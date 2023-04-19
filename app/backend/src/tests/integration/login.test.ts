@@ -92,4 +92,30 @@ describe('tests routes for LOGIN', () => {
       })
     })
   
+    describe('GET login/role', () => {
+      describe('if request is unsuccessful', () => {
+        it('should return status 401 and error message if token is not provided', async() => {
+          const httpResponse = await chai.request(app).get('/login/role')
+          expect(httpResponse.status).to.be.equal(401)
+          expect(httpResponse.body).to.be.equal({
+            message: "Token not found"
+          })
+        })
+        it('should return status 401 and error message if token is not valid', async() => {
+          const httpResponse = await chai.request(app).get('/login/role')
+          expect(httpResponse.status).to.be.equal(401)
+          expect(httpResponse.body).to.be.equal({
+            message: "Token must be a valid token"
+          })
+        })
+      describe('if request is successful',  () => {
+        it('should return status 200 and user role ', async () => {
+          const userRole = { "role": "admin" }
+          const httpResponse = await chai.request(app).get('/login/role')
+          expect(httpResponse.status).to.be.equal(200)
+          expect(httpResponse.body).to.be.deep.equal(userRole)
+        })
+      })
+    })
+  })
 })

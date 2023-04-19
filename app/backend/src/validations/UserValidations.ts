@@ -12,7 +12,7 @@ export default class UserValidation implements IUserValidation {
     if (password.length < 6) { throw new InvalidParamError('Invalid email or password'); }
   };
 
-  validateUser = (user:ILogin): void => {
+  validateLogin = (user:ILogin): void => {
     this.validateEmail(user.email);
     this.validatePassword(user.password);
   };

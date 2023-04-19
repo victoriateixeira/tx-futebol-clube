@@ -1,4 +1,5 @@
 import * as jwt from 'jsonwebtoken';
+
 import ITokenService, { ITokenPayload } from './interfaces/ITokenService';
 
 export default class TokenService implements ITokenService {
@@ -16,4 +17,7 @@ export default class TokenService implements ITokenService {
   sign(payload: ITokenPayload): string {
     return this._jwt.sign(payload, this._secret, this._options);
   }
+
+  verifyToken = (authorization: string)
+  : string | jwt.JwtPayload => this._jwt.verify(authorization, this._secret);
 }
