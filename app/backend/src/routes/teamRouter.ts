@@ -3,10 +3,12 @@ import TeamController from '../controllers/TeamController';
 import TeamSequelizeRepository from '../repositories/TeamSequelizeRepository';
 import TeamService from '../services/TeamService';
 
-const router = Router();
+const teamRouter = Router();
 
 const teamSequelizeRepository = new TeamSequelizeRepository();
 const teamService = new TeamService(teamSequelizeRepository);
 const teamController = new TeamController(teamService);
-router
-  .get('/teams', teamController.getAll.bind(teamController));
+teamRouter.get('/', teamController.getAll.bind(teamController));
+teamRouter.get('/:id', teamController.getById.bind(teamController));
+
+export default teamRouter;
