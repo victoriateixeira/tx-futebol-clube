@@ -15,7 +15,7 @@ export default class TokenService implements ITokenService {
   }
 
   sign(payload: ITokenPayload): string {
-    return this._jwt.sign(payload, this._secret, this._options);
+    return this._jwt.sign({ payload }, this._secret, this._options);
   }
 
   verifyToken = (authorization: string)

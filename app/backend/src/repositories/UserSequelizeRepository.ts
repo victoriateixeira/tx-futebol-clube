@@ -7,6 +7,12 @@ export default class UserSequelizeRepository implements IUserRepository {
 
   async getByEmail(email:string): Promise<IUserWithId | null> {
     const user = await this._userModel.findOne({ where: { email } });
+    console.log(user, 'USERREPOSITORY');
+    return user;
+  }
+
+  async getById(id: number): Promise<IUserWithId | null> {
+    const user = await this._userModel.findByPk(id);
     return user;
   }
 }

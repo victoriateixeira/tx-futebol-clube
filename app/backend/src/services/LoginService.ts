@@ -1,8 +1,10 @@
+import NotFoundError from '../errors/notFound-error';
 import IUserValidation from '../validations/interfaces/IUserValidation';
 import ITokenService, { ITokenPayload } from '../utils/interfaces/ITokenService';
 import UnauthorizedError from '../errors/unauthorized-error';
 import IUserRepository from '../repositories/interface/IUserRepository';
 import ILoginService from './interfaces/ILoginService';
+import { IUserWithId } from './interfaces/IUserService';
 
 export default class LoginService implements ILoginService {
   private _userRepository: IUserRepository;
@@ -29,7 +31,13 @@ export default class LoginService implements ILoginService {
       throw new UnauthorizedError('Invalid email or password');
     }
     const payload: ITokenPayload = { id: isUser.id, email: isUser.email };
-    const token = await this._tokenService.sign(payload);
+    const token = this._tokenService.sign(payload);
     return token;
+  }
+
+  async getById(id: number): Promise<IUserWithId> {
+    const user = await this._userRepository.getById(id);
+    if (!user) throw new NotFoundError('O id informado não existe');
+    return user;
   }
 }

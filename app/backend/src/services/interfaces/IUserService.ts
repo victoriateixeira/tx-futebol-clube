@@ -10,5 +10,5 @@ export interface IUserWithId extends IUser {
 }
 
 // export default interface IUserService {
-//   // getByEmail(email: string):Promise<Omit<IUserWithId, 'password'>>
+//   getById(email: string):Promise<Omit<IUserWithId, 'password'>>
 // }

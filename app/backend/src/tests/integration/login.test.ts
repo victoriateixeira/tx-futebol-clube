@@ -102,7 +102,7 @@ describe('tests routes for LOGIN', () => {
           })
         })
         it('should return status 401 and error message if token is not valid', async() => {
-          const httpResponse = await chai.request(app).get('/login/role')
+          const httpResponse = await  chai.request(app).get('/login/role').set('Authorization', 'invalidToken')
           expect(httpResponse.status).to.be.equal(401)
           expect(httpResponse.body).to.be.equal({
             message: "Token must be a valid token"
@@ -111,9 +111,17 @@ describe('tests routes for LOGIN', () => {
       describe('if request is successful',  () => {
         it('should return status 200 and user role ', async () => {
           const userRole = { "role": "admin" }
-          const httpResponse = await chai.request(app).get('/login/role')
-          expect(httpResponse.status).to.be.equal(200)
-          expect(httpResponse.body).to.be.deep.equal(userRole)
+          const body =
+          {
+            email: 'valid_email@email.com',
+            password: '123456'
+          }
+
+          const httpResponse = await chai.request(app).post('/login')
+          const token = httpResponse.body.token
+          const httpResponseRole = await chai.request(app).get('login/role').set('Authorization', token)
+          expect(httpResponseRole.status).to.be.equal(200)
+          expect(httpResponseRole.body).to.be.deep.equal(userRole)
         })
       })
     })
