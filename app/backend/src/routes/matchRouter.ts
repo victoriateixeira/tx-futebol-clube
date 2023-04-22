@@ -9,6 +9,7 @@ const matchSequelizeRepository = new MatchSequelizeRepository();
 const matchService = new MatchService(matchSequelizeRepository);
 const matchController = new MatchController(matchService);
 matchRouter.get('/', matchController.searchStatus.bind(matchController));
+matchRouter.patch('/:id', matchController.endMatch.bind(matchController));
 // matchRouter.get('/:id', matchController.getById.bind(matchController));
 
 export default matchRouter;

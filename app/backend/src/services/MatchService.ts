@@ -18,4 +18,9 @@ export default class MatchService implements IMatchService {
     const matches = await this._matchRepository.searchStatus(status);
     return matches;
   }
+
+  async endMatch(id: number): Promise<{ message: string }> {
+    const end = await this._matchRepository.endMatch(id);
+    return end;
+  }
 }

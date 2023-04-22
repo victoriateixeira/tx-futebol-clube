@@ -28,4 +28,14 @@ export default class MatchController implements IMatchController {
       next(error);
     }
   }
+
+  async endMatch(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
+    try {
+      const { id } = req.params;
+      const resp = await this._matchService.endMatch(+id);
+      return res.status(200).json(resp);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

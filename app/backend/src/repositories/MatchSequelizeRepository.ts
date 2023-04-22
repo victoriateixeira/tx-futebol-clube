@@ -24,4 +24,14 @@ export default class MatchSequelizeRepository implements IMatchRepository {
     if (!filteredMatches) throw new NotFoundError('No matches found');
     return filteredMatches;
   }
+
+  async endMatch(id: number): Promise<{ message: string; }> {
+    await this._matchModel.update(
+      {
+        inProgress: false,
+      },
+      { where: { id } },
+    );
+    return { message: 'Finished' };
+  }
 }
