@@ -16,4 +16,5 @@ export interface IMatch {
 export default interface IMatchService {
   getAll(): Promise<IMatch[]>
   // getById(id: number): Promise<IMatch>
+  searchStatus(status: boolean): Promise<IMatch[]>
 }
