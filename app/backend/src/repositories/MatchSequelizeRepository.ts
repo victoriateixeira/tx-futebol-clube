@@ -15,6 +15,12 @@ export default class MatchSequelizeRepository implements IMatchRepository {
     return matches;
   }
 
+  async getById(id: number): Promise<IMatch> {
+    const match = await this._matchModel.findByPk(id);
+    if (!match) { throw new NotFoundError('ID not found'); }
+    return match;
+  }
+
   async searchStatus(status: boolean): Promise<IMatch[]> {
     const filteredMatches = await this._matchModel.findAll({
       include: [{ model: Team, as: 'homeTeam', attributes: { exclude: ['id'] } },
@@ -26,6 +32,7 @@ export default class MatchSequelizeRepository implements IMatchRepository {
   }
 
   async endMatch(id: number): Promise<{ message: string; }> {
+    await this.getById(id);
     await this._matchModel.update(
       {
         inProgress: false,
