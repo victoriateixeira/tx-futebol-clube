@@ -14,11 +14,6 @@ export default class MatchService implements IMatchService {
     return matches;
   }
 
-  async getById(id: number): Promise<IMatch> {
-    const match = await this._matchRepository.getById(id);
-    return match;
-  }
-
   async searchStatus(status: boolean):Promise<IMatch[]> {
     const matches = await this._matchRepository.searchStatus(status);
     return matches;
@@ -27,5 +22,10 @@ export default class MatchService implements IMatchService {
   async endMatch(id: number): Promise<{ message: string }> {
     const end = await this._matchRepository.endMatch(id);
     return end;
+  }
+
+  async updateMatch(id: number, homeScore: number, awayScore: number): Promise<string> {
+    const upd = await this._matchRepository.updateMatch(id, homeScore, awayScore);
+    return upd;
   }
 }

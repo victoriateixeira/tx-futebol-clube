@@ -41,4 +41,16 @@ export default class MatchSequelizeRepository implements IMatchRepository {
     );
     return { message: 'Finished' };
   }
+
+  async updateMatch(id: number, scoreHome: number, scoreAway: number): Promise<string> {
+    await this.getById(id);
+    await this._matchModel.update(
+      {
+        homeTeamGoals: scoreHome,
+        awayTeamGoals: scoreAway,
+      },
+      { where: { id } },
+    );
+    return 'Scores updated!';
+  }
 }

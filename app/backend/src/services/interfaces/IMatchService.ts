@@ -15,7 +15,8 @@ export interface IMatch {
 
 export default interface IMatchService {
   getAll(): Promise<IMatch[]>
-  getById(id: number): Promise<IMatch>
+  // getById(id: number): Promise<IMatch>
   searchStatus(status: boolean): Promise<IMatch[]>
   endMatch(id: number): Promise<{ message: string }>
+  updateMatch(id: number, homeScore: number, awayScore: number): Promise<string>
 }

@@ -6,4 +6,5 @@ export default interface IMatchRepository {
   getById(id: number): Promise<IMatch>
   searchStatus(status: boolean): Promise<IMatch[]>
   endMatch(id: number): Promise<{ message: string }>
+  updateMatch(id: number, scoreHome: number, scoreAway: number): Promise <string>
 }
