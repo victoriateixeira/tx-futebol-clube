@@ -49,7 +49,8 @@ awayTeamGoals: {
 inProgress: {
   type: Sequelize.BOOLEAN,
   allowNull: false,
-  field: 'in_progress'
+  field: 'in_progress',
+  defaultValue: true
 },
   });
   },

@@ -49,4 +49,14 @@ export default class MatchController implements IMatchController {
       next(error);
     }
   }
+
+  async createMatch(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
+    try {
+      const match = req.body;
+      const newMatch = await this._matchService.createMatch(match);
+      return res.status(200).json(newMatch);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

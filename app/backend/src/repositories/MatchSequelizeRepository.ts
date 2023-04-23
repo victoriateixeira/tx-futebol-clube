@@ -1,7 +1,7 @@
 import NotFoundError from '../errors/notFound-error';
 import Team from '../database/models/Team';
 import Match from '../database/models/Match';
-import { IMatch } from '../services/interfaces/IMatchService';
+import { IMatch, IMatchReq } from '../services/interfaces/IMatchService';
 import IMatchRepository from './interface/IMatchRepository';
 
 export default class MatchSequelizeRepository implements IMatchRepository {
@@ -52,5 +52,12 @@ export default class MatchSequelizeRepository implements IMatchRepository {
       { where: { id } },
     );
     return 'Scores updated!';
+  }
+
+  async createMatch(match: IMatchReq): Promise<Match> {
+    const { homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals } = match;
+    const newMatch = await this._matchModel
+      .create({ homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals });
+    return newMatch;
   }
 }

@@ -1,5 +1,6 @@
 // import Match from '../../database/models/Match';
-import { IMatch } from '../../services/interfaces/IMatchService';
+
+import { IMatch, IMatchReq } from '../../services/interfaces/IMatchService';
 
 export default interface IMatchRepository {
   getAll(): Promise<IMatch[]>;
@@ -7,4 +8,5 @@ export default interface IMatchRepository {
   searchStatus(status: boolean): Promise<IMatch[]>
   endMatch(id: number): Promise<{ message: string }>
   updateMatch(id: number, scoreHome: number, scoreAway: number): Promise <string>
+  createMatch(match:IMatchReq): Promise<IMatch>
 }
