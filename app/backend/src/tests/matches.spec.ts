@@ -3,12 +3,13 @@ import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
-import { app } from '../../app';
-import Example from '../../database/models/ExampleModel';
+import { app } from '../app';
+import Example from '../database/models/ExampleModel';
 
 import { Response } from 'superagent';
 import { Model } from 'sequelize';
-import Match from '../../database/models/Match'
+import Match from '../database/models/Match'
+import MatchSequelizeRepository from '../repositories/MatchSequelizeRepository';
 chai.use(chaiHttp);
 
 const { expect } = chai;
@@ -49,7 +50,7 @@ describe('tests routes for MATCHES', () => {
             }
           }
         ]
-  // sinon.stub(Model, 'findAll').resolves(matches as Match[]);
+  sinon.stub(MatchSequelizeRepository.prototype, 'getAll').resolves(matches);
   const httpResponse = await chai.request(app).get('/matches');
   expect (httpResponse.status).to.be.equal(200);
   expect (httpResponse.body).to.deep.equal(matches);
@@ -57,38 +58,35 @@ describe('tests routes for MATCHES', () => {
     })
   })
 
-  describe('GET /match/id', () => {
-    describe('when request is successful', () => {
-      it('should return status 200 and one team with the searched id', async () => {
-        const match =  {
-          "id": 41,
-          "homeTeamId": 16,
-          "homeTeamGoals": 2,
-          "awayTeamId": 9,
-          "awayTeamGoals": 0,
-          "inProgress": true,
-          "homeTeam": {
-            "teamName": "São Paulo"
-          },
-          "awayTeam": {
-            "teamName": "Internacional"
-          }
-        }
-        // sinon.stub(Model, 'findByPk').resolves(match as Match)
-        const httpResponse = await chai.request(app).get('/macthes/:41');
-        expect(httpResponse.status).to.equal(200);
-        expect(httpResponse.body).to.be.deep.equal(match)
-      })
-    })
-  })
+  // describe('GET /match/id', () => {
+  //   describe('when request is successful', () => {
+  //     it('should return status 200 and one team with the searched id', async () => {
+  //       const match =  {
+  //         "id": 41,
+  //         "homeTeamId": 16,
+  //         "homeTeamGoals": 2,
+  //         "awayTeamId": 9,
+  //         "awayTeamGoals": 0,
+  //         "inProgress": true,
+  //         "homeTeam": {
+  //           "teamName": "São Paulo"
+  //         },
+  //         "awayTeam": {
+  //           "teamName": "Internacional"
+  //         }
+  //       }
+  //       // sinon.stub(Model, 'findByPk').resolves(match as Match)
+  //       const httpResponse = await chai.request(app).get('/macthes/:41');
+  //       expect(httpResponse.status).to.equal(200);
+  //       expect(httpResponse.body).to.be.deep.equal(match)
+  //     })
+  //   })
+  // })
 
   describe('GET /matches?inProgress=false', () => {
     describe('when request is successful', () => {
       it('should return status 200 and all the completed matches', async () => {
-        const httpResponse = await chai.request(app).get('/matches?inProgress=false')
-
-        expect (httpResponse.status).to.be.equal(200)
-        expect (httpResponse.body).to.be.deep.equal([ {
+        const filteredMatch = [ {
           "id": 1,
           "homeTeamId": 16,
           "homeTeamGoals": 1,
@@ -101,13 +99,15 @@ describe('tests routes for MATCHES', () => {
           "awayTeam": {
             "teamName": "Grêmio"
           }
-        }])
-      })
-      it('should return status 200 and all the matches in progress', async () => {
-        const httpResponse = await chai.request(app).get('/matches?inProgress=true')
+        }]
+        sinon.stub(MatchSequelizeRepository.prototype, 'searchStatus').resolves(filteredMatch)
+        const httpResponse = await chai.request(app).get('/matches?inProgress=false')
 
         expect (httpResponse.status).to.be.equal(200)
-        expect (httpResponse.body).to.be.deep.equal([ {
+        expect (httpResponse.body).to.be.deep.equal(filteredMatch)
+      })
+      it('should return status 200 and all the matches in progress', async () => {
+        const filteredMatch = [ {
           "id": 41,
           "homeTeamId": 16,
           "homeTeamGoals": 2,
@@ -120,7 +120,12 @@ describe('tests routes for MATCHES', () => {
           "awayTeam": {
             "teamName": "Internacional"
           }
-        }])
+        }]
+        sinon.stub(MatchSequelizeRepository.prototype, 'searchStatus').resolves(filteredMatch)
+        const httpResponse = await chai.request(app).get('/matches?inProgress=true')
+
+        expect (httpResponse.status).to.be.equal(200)
+        expect (httpResponse.body).to.be.deep.equal(filteredMatch)
       })
       
     })

@@ -2,12 +2,13 @@ import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
-import { app } from '../../app';
+import { app } from '../app';
 // import Example from '../../database/models/ExampleModel';
-import LoginService from '../../services/LoginService'
+import LoginService from '../services/LoginService'
 // import { Response } from 'superagent';
 import { Model } from 'sequelize';
-import User from '../../database/models/User'
+import User from '../database/models/User'
+import TokenService from '../utils/TokenService';
 chai.use(chaiHttp);
 
 const { expect } = chai;
@@ -45,7 +46,7 @@ describe('tests routes for LOGIN', () => {
         sinon.stub(Model, "findOne").resolves(null)
         const httpResponse = await chai.request(app).post('/login').send(body)
         expect (httpResponse.status).to.be.equal(401);
-        expect (httpResponse.body).to.deep.equal({ "message": "Invalid email or password" });
+        expect (httpResponse.body).to.deep.equal({ message: "Invalid email or password" });
       })
       it('should return status 401 when password is not valid', async () => {
         const user = {
@@ -64,7 +65,7 @@ describe('tests routes for LOGIN', () => {
          sinon.stub(LoginService, 'verifyUserPassword').returns(false)
          const httpResponse = await chai.request(app).post('/login').send(body)
          expect (httpResponse.status).to.be.equal(401);
-         expect (httpResponse.body).to.deep.equal({ "message": "Invalid email or password" });
+         expect (httpResponse.body).to.deep.equal({ message: "Invalid email or password" });
       })
     })
 
@@ -86,7 +87,7 @@ describe('tests routes for LOGIN', () => {
     sinon.stub(Model, 'findOne').resolves(user as User)
     sinon.stub(LoginService, 'verifyUserPassword').returns(true)
     const httpResponse = await chai.request(app).post('/login').send(body)
-    expect (httpResponse.status).to.be.equal(401);
+    expect (httpResponse.status).to.be.equal(200);
     expect(httpResponse.body).to.have.key('token')
     expect (httpResponse.body.token).to.be.a('string');
       })
@@ -116,10 +117,10 @@ describe('tests routes for LOGIN', () => {
             email: 'valid_email@email.com',
             password: '123456'
           }
-
+          sinon.stub(TokenService.prototype, 'sign').returns('token')
           const httpResponse = await chai.request(app).post('/login')
-          const token = httpResponse.body.token
-          const httpResponseRole = await chai.request(app).get('login/role').set('Authorization', token)
+          // const token = httpResponse.body.token
+          const httpResponseRole = await chai.request(app).get('login/role').set('Authorization', 'token')
           expect(httpResponseRole.status).to.be.equal(200)
           expect(httpResponseRole.body).to.be.deep.equal(userRole)
         })

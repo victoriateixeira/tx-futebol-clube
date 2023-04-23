@@ -27,6 +27,7 @@ export default class LoginService implements ILoginService {
   async login(email: string, password:string): Promise<string> {
     this._userValidations.validateLogin({ email, password });
     const isUser = await this._userRepository.getByEmail(email);
+    console.log(isUser, 'LOGINSERVICE');
     if (!isUser || !LoginService.verifyUserPassword(password, isUser.password)) {
       throw new UnauthorizedError('Invalid email or password');
     }
