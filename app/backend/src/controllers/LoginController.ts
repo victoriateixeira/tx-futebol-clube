@@ -26,7 +26,7 @@ export default class LoginController implements ILoginController {
     try {
       const { authorization } = req.headers;
       if (!authorization) return;
-      const { data: { id } } = this._tokenService.verifyToken(authorization) as JwtPayload;
+      const { payload: { id } } = this._tokenService.verifyToken(authorization) as JwtPayload;
       const user = await this._loginService.getById(id);
       const { role } = user;
       return res.status(200).json({ role });

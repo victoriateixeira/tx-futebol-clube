@@ -17,7 +17,6 @@ const loginController = new LoginController(loginService, tokenService);
 loginRouter.post('/', verifyFields, loginController.login.bind(loginController));
 loginRouter.get(
   '/role',
-  verifyFields,
   validateToken,
   loginController.getRole.bind(loginController),
 );

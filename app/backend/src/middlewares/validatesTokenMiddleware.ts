@@ -7,12 +7,14 @@ const validateToken = (
   res: Response,
   next: NextFunction,
 ): Response | void => {
-  const { authorization } = req.headers;
   try {
+    const { authorization } = req.headers;
+    console.log(authorization, 'AUTHORIZATION');
     if (!authorization) {
-      throw new UnauthorizedError('Token not found');
+      return res.status(401).json({ message: 'Token not found' });
     }
-    new TokenService().verifyToken(authorization);
+    const resp = new TokenService().verifyToken(authorization);
+    console.log(resp, 'TOKENVERIFICATIOn');
   } catch (error) {
     throw new UnauthorizedError('Token must be a valid token');
   }
