@@ -17,7 +17,7 @@ export default class MatchController implements IMatchController {
   async searchStatus(req: Request, res: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { inProgress } = req.query;
-      if (inProgress === undefined) {
+      if (!inProgress || inProgress === undefined) {
         const matches = await this._matchService.getAll();
         return res.status(200).json(matches);
       }
@@ -54,7 +54,7 @@ export default class MatchController implements IMatchController {
     try {
       const match = req.body;
       const newMatch = await this._matchService.createMatch(match);
-      return res.status(200).json(newMatch);
+      return res.status(201).json(newMatch);
     } catch (error) {
       next(error);
     }

@@ -5,7 +5,6 @@ import UnauthorizedError from '../errors/unauthorized-error';
 export default class UserValidation implements IUserValidation {
   validateEmail = (email: string): void => {
     const emailValidation = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    console.log(emailValidation.test(email), 'EMAILVALIDATION');
     if (!emailValidation.test(email)) { throw new UnauthorizedError('Invalid email or password'); }
   };
 

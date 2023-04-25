@@ -23,7 +23,6 @@ export default class LoginService implements ILoginService {
 
   static async verifyUserPassword(reqPassword:string, dbPassword:string): Promise<boolean> {
     const isValid = await bcrypt.compare(reqPassword, dbPassword);
-    console.log(isValid, 'LOGINSERVICEPASSWORDS');
     return isValid;
     // return reqPassword === dbPassword;
   }
@@ -33,7 +32,6 @@ export default class LoginService implements ILoginService {
     const isUser = await this._userRepository.getByEmail(email);
     if (!isUser) { throw new UnauthorizedError('Invalid email or password'); }
     const isPassword = await LoginService.verifyUserPassword(password, isUser.password);
-    console.log(isUser, 'LOGIN SERVICE IS USER');
     if (!isPassword) {
       throw new UnauthorizedError('Invalid email or password');
     }
