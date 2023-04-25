@@ -24,6 +24,7 @@ describe('tests routes for LOGIN', () => {
             password: "123456"
           }
   const httpResponse = await chai.request(app).post('/login').send(body)
+  
   expect (httpResponse.status).to.be.equal(400);
   expect (httpResponse.body).to.deep.equal({ message: "All fields must be filled" });
       })
@@ -62,7 +63,7 @@ describe('tests routes for LOGIN', () => {
             password: 'invalid_password'
           }
          sinon.stub(Model, 'findOne').resolves(user as User)
-         sinon.stub(LoginService, 'verifyUserPassword').returns(false)
+         sinon.stub(LoginService, 'verifyUserPassword').resolves(false)
          const httpResponse = await chai.request(app).post('/login').send(body)
          expect (httpResponse.status).to.be.equal(401);
          expect (httpResponse.body).to.deep.equal({ message: "Invalid email or password" });
@@ -85,7 +86,7 @@ describe('tests routes for LOGIN', () => {
               password: '123456'
             }
     sinon.stub(Model, 'findOne').resolves(user as User)
-    sinon.stub(LoginService, 'verifyUserPassword').returns(true)
+    sinon.stub(LoginService, 'verifyUserPassword').resolves(true)
     const httpResponse = await chai.request(app).post('/login').send(body)
     expect (httpResponse.status).to.be.equal(200);
     expect(httpResponse.body).to.have.key('token')

@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcryptjs';
 import NotFoundError from '../errors/notFound-error';
 import IUserValidation from '../validations/interfaces/IUserValidation';
 import ITokenService, { ITokenPayload } from '../utils/interfaces/ITokenService';
@@ -20,15 +21,20 @@ export default class LoginService implements ILoginService {
     this._userValidations = userValidations;
   }
 
-  static verifyUserPassword(reqPassword:string, dbPassword:string) {
-    return reqPassword === dbPassword;
+  static async verifyUserPassword(reqPassword:string, dbPassword:string): Promise<boolean> {
+    const isValid = await bcrypt.compare(reqPassword, dbPassword);
+    console.log(isValid, 'LOGINSERVICEPASSWORDS');
+    return isValid;
+    // return reqPassword === dbPassword;
   }
 
   async login(email: string, password:string): Promise<string> {
     this._userValidations.validateLogin({ email, password });
     const isUser = await this._userRepository.getByEmail(email);
-    console.log(isUser, 'LOGINSERVICE');
-    if (!isUser || !LoginService.verifyUserPassword(password, isUser.password)) {
+    if (!isUser) { throw new UnauthorizedError('Invalid email or password'); }
+    const isPassword = await LoginService.verifyUserPassword(password, isUser.password);
+    console.log(isUser, 'LOGIN SERVICE IS USER');
+    if (!isPassword) {
       throw new UnauthorizedError('Invalid email or password');
     }
     const payload: ITokenPayload = { id: isUser.id, email: isUser.email };

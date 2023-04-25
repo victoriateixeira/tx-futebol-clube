@@ -18,7 +18,7 @@ export default class LoginController implements ILoginController {
       const token = await this._loginService.login(email, password);
       return res.status(200).json({ token });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 

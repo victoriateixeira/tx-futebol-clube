@@ -55,9 +55,9 @@ export default class MatchSequelizeRepository implements IMatchRepository {
   }
 
   async createMatch(match: IMatchReq): Promise<Match> {
-    const { homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals } = match;
+    // const { homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals } = match;
     const newMatch = await this._matchModel
-      .create({ homeTeamId, homeTeamGoals, awayTeamId, awayTeamGoals });
+      .create({ ...match });
     return newMatch;
   }
 }
