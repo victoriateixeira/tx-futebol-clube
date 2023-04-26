@@ -52,11 +52,6 @@ export default class MatchController implements IMatchController {
 
   async createMatch(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     try {
-      // const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body;
-      // const match = { homeTeamId: +homeTeamId,
-      //   awayTeamId: +awayTeamId,
-      //   homeTeamGoals: +homeTeamGoals,
-      //   awayTeamGoals: +awayTeamGoals };
       const match = req.body;
       const newMatch = await this._matchService.createMatch(match);
       return res.status(201).json(newMatch);

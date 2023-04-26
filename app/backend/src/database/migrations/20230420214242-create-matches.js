@@ -42,7 +42,7 @@ awayTeamId: {
 },
 },
 awayTeamGoals: {
-  type: Sequelize.STRING,
+  type: Sequelize.INTEGER,
   allowNull: false,
   field: 'away_team_goals'
 },
