@@ -1,12 +1,12 @@
 export interface IMatch extends IMatchReq {
   id: number
   inProgress: boolean
-  // homeTeam: {
-  //   teamName: string
-  // }
-  // awayTeam: {
-  //   teamName: string
-  // }
+  homeTeam?: {
+    teamName: string
+  }
+  awayTeam?: {
+    teamName: string
+  }
 }
 
 export interface IMatchReq {
