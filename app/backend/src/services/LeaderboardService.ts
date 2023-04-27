@@ -37,6 +37,8 @@ export default class LeaderboardService implements ILeaderboardService {
     scoreBoardArray.sort((a, b) => {
       if (b.totalPoints > a.totalPoints) return 1;
       if (b.totalPoints < a.totalPoints) return -1;
+      if (b.totalVictories > a.totalVictories) return 1;
+      if (b.totalVictories < a.totalVictories) return -1;
       if (b.goalsBalance > a.goalsBalance) return 1;
       if (b.goalsBalance < a.goalsBalance) return -1;
       if (b.goalsFavor > a.goalsFavor) return 1;
@@ -89,11 +91,11 @@ export default class LeaderboardService implements ILeaderboardService {
         const matchesStats = LeaderboardService.getStats(filteredMatches, team);
         const teamName = await this._teamRepository.getById(team);
         return { name: teamName.teamName,
-          ...matchesStats,
           totalPoints: matchesStats.totalDraws + matchesStats.totalVictories * 3,
+          ...matchesStats,
           goalsBalance: matchesStats.goalsFavor - matchesStats.goalsOwn,
-          efficiency: Number((((matchesStats.totalDraws + matchesStats.totalVictories)
-        / (matchesStats.totalGames * 3)) * 100).toFixed(2)),
+          efficiency: (((matchesStats.totalDraws + matchesStats.totalVictories * 3)
+        / (matchesStats.totalGames * 3)) * 100).toFixed(2),
 
         };
       }));

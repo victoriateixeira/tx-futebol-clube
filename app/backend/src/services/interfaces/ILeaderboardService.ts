@@ -4,7 +4,7 @@ export interface IScoreBoard extends IStats {
   name: string,
   totalPoints: number,
   goalsBalance: number,
-  efficiency: number
+  efficiency: string,
 }
 export interface IStats {
   totalGames: number,
