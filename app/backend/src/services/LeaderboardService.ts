@@ -33,6 +33,19 @@ export default class LeaderboardService implements ILeaderboardService {
   //       .sortTotalPoints(scoreBoardArray)));
   // }
 
+  static sortScoreBoard(scoreBoardArray: IScoreBoard[]) {
+    scoreBoardArray.sort((a, b) => {
+      if (b.totalPoints > a.totalPoints) return 1;
+      if (b.totalPoints < a.totalPoints) return -1;
+      if (b.goalsBalance > a.goalsBalance) return 1;
+      if (b.goalsBalance < a.goalsBalance) return -1;
+      if (b.goalsFavor > a.goalsFavor) return 1;
+      if (b.goalsFavor < a.goalsFavor) return -1;
+      return 0;
+    });
+    return scoreBoardArray;
+  }
+
   static sortLeaderboard(scoreBoardArray: IScoreBoard[]) {
     const sortTotalPoints = scoreBoardArray.sort((a, b) => b.totalPoints - a.totalPoints);
     const sortGoalsBalance = sortTotalPoints.sort((a, b) => b.goalsBalance - a.goalsBalance);
@@ -84,7 +97,7 @@ export default class LeaderboardService implements ILeaderboardService {
 
         };
       }));
-      return LeaderboardService.sortLeaderboard(await scoreBoard);
+      return LeaderboardService.sortScoreBoard(await scoreBoard);
     }
   }
 

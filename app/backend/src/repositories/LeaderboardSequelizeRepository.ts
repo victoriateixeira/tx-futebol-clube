@@ -9,8 +9,9 @@ export default class LeaderboardRepository implements ILeaderboardRepository {
 
   public async getHomeTeams(): Promise<IMatch[]> {
     const homeTeams = await this._matchModel.findAll({
-      attributes: [[sequelize.fn('DISTINCT', sequelize.col('home_team_id')), 'homeTeamId']],
       where: { inProgress: false },
+      attributes: [[sequelize.fn('DISTINCT', sequelize.col('home_team_id')), 'homeTeamId']],
+
     });
     console.log(homeTeams);
     return homeTeams;
