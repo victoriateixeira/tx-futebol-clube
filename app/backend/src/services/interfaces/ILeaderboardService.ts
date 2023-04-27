@@ -1,5 +1,3 @@
-// import { IMatch } from './IMatchService';
-
 export interface IScoreBoard extends IStats {
   name: string,
   totalPoints: number,

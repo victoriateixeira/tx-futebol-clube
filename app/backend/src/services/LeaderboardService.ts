@@ -27,12 +27,6 @@ export default class LeaderboardService implements ILeaderboardService {
       );
   }
 
-  // static sortLeaderBoard(scoreBoardArray: IScoreBoard[]) {
-  //   LeaderboardService.sortGoalsFavor(LeaderboardService
-  //     .sortGoalsBalance(LeaderboardService
-  //       .sortTotalPoints(scoreBoardArray)));
-  // }
-
   static sortScoreBoard(scoreBoardArray: IScoreBoard[]) {
     scoreBoardArray.sort((a, b) => {
       if (b.totalPoints > a.totalPoints) return 1;
@@ -54,32 +48,6 @@ export default class LeaderboardService implements ILeaderboardService {
     const sortGoalsFavor = sortGoalsBalance.sort((a, b) => b.goalsFavor - a.goalsFavor);
     return sortGoalsFavor;
   }
-
-  // static sortGoalsBalance(scoreBoardArray: IScoreBoard[]) {
-  //   const sortGoalsBalance = scoreBoardArray.sort((a, b) => {
-  //     if (a.goalsBalance < b.goalsBalance) {
-  //       return -1;
-  //     }
-  //     if (a.goalsBalance > b.goalsBalance) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
-  //   return sortGoalsBalance;
-  // }
-
-  // static sortGoalsFavor(scoreBoardArray: IScoreBoard[]) {
-  //   const sortGoalsFavor = scoreBoardArray.sort((a, b) => {
-  //     if (a.goalsFavor < b.goalsFavor) {
-  //       return -1;
-  //     }
-  //     if (a.goalsFavor > b.goalsFavor) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
-  //   return sortGoalsFavor;
-  // }
 
   async leaderBoardHome():Promise < IScoreBoard[] | undefined> {
     const homeTeams = (await this._leaderboardRepository.getHomeTeams())
