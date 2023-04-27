@@ -60,10 +60,6 @@ export default class LeaderboardService implements ILeaderboardService {
   }
 
   async leaderBoardHome():Promise <IScoreBoardHome[] | undefined> {
-    // const homeTeams = (await this._leaderboardRepository.getHomeTeams())
-    //   .map((match) => match.homeTeamId);
-    // const allMatches = await this._matchesRepository.getAll();
-    // const filteredMatches = allMatches.filter((match: IMatch) => !match.inProgress);
     const homeTeams = await this.getTeams('homeTeam');
     const filteredMatches = await this.getAllFinishedMatches();
     if (filteredMatches) {
@@ -85,10 +81,6 @@ export default class LeaderboardService implements ILeaderboardService {
   }
 
   async leaderBoardAway():Promise <IScoreBoardAway[] | undefined> {
-    // const homeTeams = (await this._leaderboardRepository.getHomeTeams())
-    //   .map((match) => match.homeTeamId);
-    // const allMatches = await this._matchesRepository.getAll();
-    // const filteredMatches = allMatches.filter((match: IMatch) => !match.inProgress);
     const awayTeams = await this.getTeams('awayTeam');
     const filteredMatches = await this.getAllFinishedMatches();
     if (filteredMatches) {
@@ -115,7 +107,8 @@ export default class LeaderboardService implements ILeaderboardService {
     return {
       totalGames: allTeamMatches.length,
       totalVictories: allTeamMatches
-        .filter((match: any) => match[`${mainTeam}Goals`] > match[`${secondTeam}Goals`])
+        .filter((match: any) => match[`${mainTeam}Goals`]
+         > match[`${secondTeam}Goals`])
         .length,
       totalLosses: allTeamMatches
         .filter((match: any) => match[`${mainTeam}Goals`] < match[`${secondTeam}Goals`])
