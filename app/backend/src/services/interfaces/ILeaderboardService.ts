@@ -1,4 +1,4 @@
-export interface IScoreBoard extends IStats {
+export interface IScoreBoardHome extends IStats {
   name: string,
   totalPoints: number,
   goalsBalance: number,
@@ -13,8 +13,14 @@ export interface IStats {
   goalsOwn: number,
 
 }
+
+export interface IScoreBoardAway extends IStats{
+  name: string,
+  totalPoints: number
+}
 export default interface ILeaderboardService {
   // calculateGoals (allHomeTeamMatches: IMatch[], team: string): number[]
   // getStats (allMatches:IMatch[], team:number): IStats[]
-  leaderBoardHome(): Promise<IScoreBoard[] | undefined>
+  leaderBoardHome(): Promise<IScoreBoardHome[] | undefined>
+  leaderBoardAway(): Promise<IScoreBoardAway[] | undefined>
 }

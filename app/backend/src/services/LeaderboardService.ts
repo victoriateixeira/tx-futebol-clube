@@ -2,7 +2,8 @@ import IMatchRepository from '../repositories/interface/IMatchRepository';
 import ILeaderboardRepository from '../repositories/interface/ILeaderboardRepository';
 import ITeamRepository from '../repositories/interface/ITeamRepository';
 import { IMatch } from './interfaces/IMatchService';
-import ILeaderboardService, { IScoreBoard, IStats } from './interfaces/ILeaderboardService';
+import ILeaderboardService, { IScoreBoardHome,
+  IScoreBoardAway, IStats } from './interfaces/ILeaderboardService';
 
 export default class LeaderboardService implements ILeaderboardService {
   private _teamRepository: ITeamRepository;
@@ -27,7 +28,7 @@ export default class LeaderboardService implements ILeaderboardService {
       );
   }
 
-  static sortScoreBoard(scoreBoardArray: IScoreBoard[]) {
+  static sortScoreBoard(scoreBoardArray: IScoreBoardHome[]) {
     scoreBoardArray.sort((a, b) => {
       if (b.totalPoints > a.totalPoints) return 1;
       if (b.totalPoints < a.totalPoints) return -1;
@@ -39,24 +40,36 @@ export default class LeaderboardService implements ILeaderboardService {
       if (b.goalsFavor < a.goalsFavor) return -1;
       return 0;
     });
+
     return scoreBoardArray;
   }
 
-  static sortLeaderboard(scoreBoardArray: IScoreBoard[]) {
-    const sortTotalPoints = scoreBoardArray.sort((a, b) => b.totalPoints - a.totalPoints);
-    const sortGoalsBalance = sortTotalPoints.sort((a, b) => b.goalsBalance - a.goalsBalance);
-    const sortGoalsFavor = sortGoalsBalance.sort((a, b) => b.goalsFavor - a.goalsFavor);
-    return sortGoalsFavor;
+  async getTeams(team:string): Promise<number[]> {
+    if (team === 'homeTeam') {
+      return (await this._leaderboardRepository.getHomeTeams())
+        .map((match: IMatch) => match.homeTeamId);
+    }
+    return (await this._leaderboardRepository.getHomeTeams())
+      .map((match: IMatch) => match.homeTeamId);
   }
 
-  async leaderBoardHome():Promise < IScoreBoard[] | undefined> {
-    const homeTeams = (await this._leaderboardRepository.getHomeTeams())
-      .map((match) => match.homeTeamId);
+  async getAllFinishedMatches(): Promise<IMatch[]> {
     const allMatches = await this._matchesRepository.getAll();
     const filteredMatches = allMatches.filter((match: IMatch) => !match.inProgress);
+    return filteredMatches;
+  }
+
+  async leaderBoardHome():Promise <IScoreBoardHome[] | undefined> {
+    // const homeTeams = (await this._leaderboardRepository.getHomeTeams())
+    //   .map((match) => match.homeTeamId);
+    // const allMatches = await this._matchesRepository.getAll();
+    // const filteredMatches = allMatches.filter((match: IMatch) => !match.inProgress);
+    const homeTeams = await this.getTeams('homeTeam');
+    const filteredMatches = await this.getAllFinishedMatches();
     if (filteredMatches) {
       const scoreBoard = Promise.all(homeTeams.map(async (team) => {
-        const matchesStats = LeaderboardService.getStats(filteredMatches, team);
+        const matchesStats = LeaderboardService
+          .getStats(filteredMatches, team, 'homeTeam', 'awayTeam');
         const teamName = await this._teamRepository.getById(team);
         return { name: teamName.teamName,
           totalPoints: matchesStats.totalDraws + matchesStats.totalVictories * 3,
@@ -71,24 +84,68 @@ export default class LeaderboardService implements ILeaderboardService {
     }
   }
 
-  static getStats(allMatches:IMatch[], team:number): IStats {
-    const allHomeTeamMatches = allMatches
-      .filter((match: IMatch) => +match.homeTeamId === +team);
+  async leaderBoardAway():Promise <IScoreBoardAway[] | undefined> {
+    // const homeTeams = (await this._leaderboardRepository.getHomeTeams())
+    //   .map((match) => match.homeTeamId);
+    // const allMatches = await this._matchesRepository.getAll();
+    // const filteredMatches = allMatches.filter((match: IMatch) => !match.inProgress);
+    const awayTeams = await this.getTeams('awayTeam');
+    const filteredMatches = await this.getAllFinishedMatches();
+    if (filteredMatches) {
+      const scoreBoard = Promise.all(awayTeams.map(async (team) => {
+        const matchesStats = LeaderboardService
+          .getStats(filteredMatches, team, 'awayTeam', 'homeTeam');
+        const teamName = await this._teamRepository.getById(team);
+        return { name: teamName.teamName,
+          totalPoints: matchesStats.totalDraws + matchesStats.totalVictories * 3,
+          ...matchesStats,
+          goalsBalance: matchesStats.goalsFavor - matchesStats.goalsOwn,
+          efficiency: (((matchesStats.totalDraws + matchesStats.totalVictories * 3)
+        / (matchesStats.totalGames * 3)) * 100).toFixed(2),
+        };
+      }));
+      return LeaderboardService.sortScoreBoard(await scoreBoard);
+    }
+  }
+
+  static getStats(allMatches:IMatch[], team:number, mainTeam:string, secondTeam:string): IStats {
+    const allTeamMatches = allMatches
+      .filter((match: any) => +match[`${mainTeam}Id`] === +team);
 
     return {
-      totalGames: allHomeTeamMatches.length,
-      totalVictories: allHomeTeamMatches
-        .filter((match: IMatch) => match.homeTeamGoals > match.awayTeamGoals)
+      totalGames: allTeamMatches.length,
+      totalVictories: allTeamMatches
+        .filter((match: any) => match[`${mainTeam}Goals`] > match[`${secondTeam}Goals`])
         .length,
-      totalLosses: allHomeTeamMatches
-        .filter((match: IMatch) => match.homeTeamGoals < match.awayTeamGoals)
+      totalLosses: allTeamMatches
+        .filter((match: any) => match[`${mainTeam}Goals`] < match[`${secondTeam}Goals`])
         .length,
-      totalDraws: allHomeTeamMatches
-        .filter((match: IMatch) => match.homeTeamGoals === match.awayTeamGoals)
+      totalDraws: allTeamMatches
+        .filter((match: any) => match[`${mainTeam}Goals`] === match[`${secondTeam}Goals`])
         .length,
-      goalsFavor: LeaderboardService.calculateGoals(allHomeTeamMatches, 'homeTeamGoals'),
-      goalsOwn: LeaderboardService.calculateGoals(allHomeTeamMatches, 'awayTeamGoals'),
+      goalsFavor: LeaderboardService.calculateGoals(allTeamMatches, `${mainTeam}Goals`),
+      goalsOwn: LeaderboardService.calculateGoals(allTeamMatches, `${secondTeam}Goals`),
 
     };
   }
+  // static getStats(allMatches:IMatch[], team:number): IStats {
+  //   const allHomeTeamMatches = allMatches
+  //     .filter((match: IMatch) => +match.homeTeamId === +team);
+
+  //   return {
+  //     totalGames: allHomeTeamMatches.length,
+  //     totalVictories: allHomeTeamMatches
+  //       .filter((match: IMatch) => match.homeTeamGoals > match.awayTeamGoals)
+  //       .length,
+  //     totalLosses: allHomeTeamMatches
+  //       .filter((match: IMatch) => match.homeTeamGoals < match.awayTeamGoals)
+  //       .length,
+  //     totalDraws: allHomeTeamMatches
+  //       .filter((match: IMatch) => match.homeTeamGoals === match.awayTeamGoals)
+  //       .length,
+  //     goalsFavor: LeaderboardService.calculateGoals(allHomeTeamMatches, 'homeTeamGoals'),
+  //     goalsOwn: LeaderboardService.calculateGoals(allHomeTeamMatches, 'awayTeamGoals'),
+
+  //   };
+  // }
 }

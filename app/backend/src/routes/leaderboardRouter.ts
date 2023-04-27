@@ -18,5 +18,6 @@ const leaderboardService = new LeaderboardService(
 const leaderboardController = new LeaderboardController(leaderboardService);
 
 leaderboardRouter.get('/home', leaderboardController.leaderboardHome.bind(leaderboardController));
+leaderboardRouter.get('/away', leaderboardController.leaderboardAway.bind(leaderboardController));
 
 export default leaderboardRouter;

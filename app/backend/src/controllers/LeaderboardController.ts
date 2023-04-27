@@ -21,4 +21,17 @@ export default class LeaderboardController implements ILeaderboardController {
       return next(error);
     }
   }
+
+  public async leaderboardAway(
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      const awayTeams = await this._leaderboardService.leaderBoardAway();
+      return res.status(200).json(awayTeams);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
