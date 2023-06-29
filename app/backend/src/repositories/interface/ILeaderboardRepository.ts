@@ -1,6 +1,9 @@
-import { IMatch } from '../../services/interfaces/IMatchService';
+// import { IMatch } from '../../services/interfaces/IMatchService';
+import { ITypePath } from '../../utils/buildQueryLeaderboard';
+import { ILeaderBoard } from './ILeaderBoard';
 
 export default interface ILeaderboardRepository {
-  getHomeTeams(): Promise<IMatch[]>
-  getAwayTeams(): Promise<IMatch[]>
+  // getHomeTeams(): Promise<IMatch[]>
+  // getAwayTeams(): Promise<IMatch[]>
+  getLeaderboard(typePath: ITypePath): Promise<ILeaderBoard[]>
 }

@@ -1,3 +1,5 @@
+import { ILeaderBoard } from '../../repositories/interface/ILeaderBoard';
+
 export interface IScoreBoardHome extends IStats {
   name: string,
   totalPoints: number,
@@ -21,6 +23,7 @@ export interface IScoreBoardAway extends IStats{
 export default interface ILeaderboardService {
   // calculateGoals (allHomeTeamMatches: IMatch[], team: string): number[]
   // getStats (allMatches:IMatch[], team:number): IStats[]
-  leaderBoardHome(): Promise<IScoreBoardHome[] | undefined>
-  leaderBoardAway(): Promise<IScoreBoardAway[] | undefined>
+  // leaderBoardHome(): Promise<IScoreBoardHome[] | undefined>
+  // leaderBoardAway(): Promise<IScoreBoardAway[] | undefined>
+  getLeaderboard(path: string): Promise<ILeaderBoard[] | undefined>
 }
