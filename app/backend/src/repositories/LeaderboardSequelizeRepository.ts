@@ -1,12 +1,13 @@
 // import * as sequelize from 'sequelize';
 import { QueryTypes, Sequelize } from 'sequelize';
+import { ITypePath, getQuery } from '../utils/buildQueryLeaderboard';
 import db from '../database/models';
 
 import ILeaderboardRepository from './interface/ILeaderboardRepository';
 // import Match from '../database/models/Match';
 // import { IMatch } from '../services/interfaces/IMatchService';
 import { ILeaderBoard } from './interface/ILeaderBoard';
-import { ITypePath, getQuery } from '../utils/buildQueryLeaderboard';
+// import { ITypePath, getQuery } from '../utils/buildQueryLeaderboard.ts';
 
 export default class LeaderboardRepository implements ILeaderboardRepository {
   constructor(

@@ -6,6 +6,7 @@ import ILeaderboardRepository from '../repositories/interface/ILeaderboardReposi
 // import ILeaderboardService, { IScoreBoardHome,
 //   IScoreBoardAway, IStats } from './interfaces/ILeaderboardService';
 import ILeaderboardService from './interfaces/ILeaderboardService';
+// import { ITypePath } from '../utils/buildQueryLeaderboard';
 import { ITypePath } from '../utils/buildQueryLeaderboard';
 
 export default class LeaderboardService implements ILeaderboardService {
