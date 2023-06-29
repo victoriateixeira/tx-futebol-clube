@@ -2,7 +2,6 @@ import ITeamRepository from '../repositories/interface/ITeamRepository';
 import TeamValidation from '../validations/TeamValidations';
 import BadRequestError from '../errors/bad-request-error';
 import IMatchRepository from '../repositories/interface/IMatchRepository';
-// import Match from '../database/models/Match';
 import IMatchService, { IMatch, IMatchReq } from './interfaces/IMatchService';
 import ITeamValidation from '../validations/interfaces/ITeamValidation';
 

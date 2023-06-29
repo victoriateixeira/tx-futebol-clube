@@ -21,9 +21,5 @@ export interface IScoreBoardAway extends IStats{
   totalPoints: number
 }
 export default interface ILeaderboardService {
-  // calculateGoals (allHomeTeamMatches: IMatch[], team: string): number[]
-  // getStats (allMatches:IMatch[], team:number): IStats[]
-  // leaderBoardHome(): Promise<IScoreBoardHome[] | undefined>
-  // leaderBoardAway(): Promise<IScoreBoardAway[] | undefined>
   getLeaderboard(path: string): Promise<ILeaderBoard[] | undefined>
 }
