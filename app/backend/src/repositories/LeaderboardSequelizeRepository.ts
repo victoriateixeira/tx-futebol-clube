@@ -1,6 +1,7 @@
 // import * as sequelize from 'sequelize';
 import { QueryTypes, Sequelize } from 'sequelize';
-import { ITypePath, getQuery } from '../utils/buildQueryLeaderboard';
+import getQuery from '../utils/buildQueryLeaderboard';
+import ITypePath from '../utils/interfaces/ITypePath';
 import db from '../database/models';
 
 import ILeaderboardRepository from './interface/ILeaderboardRepository';
